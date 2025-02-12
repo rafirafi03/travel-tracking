@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Squada+One&display=swap');
+
+.font-squada {
+  font-family: 'Squada One', sans-serif;
+}
+
+.btn-primary {
+  background-color: #162D3A;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+
