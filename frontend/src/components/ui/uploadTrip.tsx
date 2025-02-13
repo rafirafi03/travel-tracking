@@ -22,7 +22,7 @@ export default function uploadTrip({onClick, dataLength}: pageProps) {
       ) : (
         <div className="bg-white flex flex-col items-center border border-gray-400 rounded-lg shadow-sm p-6 space-y-4 mb-6">
           <img
-            src="/public/icons/papermap.svg"
+            src="/icons/papermap.svg"
             alt="Upload Placeholder"
             className="w-50 h-50 object-cover"
           />

@@ -67,32 +67,32 @@ export const uploadTripData = async (
     const excelFile = req.file;
 
     console.log("req.body:", req.body);
-    console.log("excelFile:", excelFile)
+    console.log("excelFile:", excelFile);
 
     if (!excelFile) {
-      console.log('no excel file')
+      console.log("no excel file");
       return res
         .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
         .json({ message: "No excel file found" });
     }
 
-    console.log('excel file exists')
+    console.log("excel file exists");
 
     try {
       // Download file from Cloudinary
       const response = await axios({
         url: excelFile.path,
-        method: 'GET',
-        responseType: 'arraybuffer'
+        method: "GET",
+        responseType: "arraybuffer",
       });
 
       // Convert array buffer to buffer
       const buffer = Buffer.from(response.data);
 
       // Read from buffer directly
-      const workbook = XLSX.read(buffer);      
-      const sheetName = workbook.SheetNames[0];      
-      const worksheet = workbook.Sheets[sheetName];      
+      const workbook = XLSX.read(buffer);
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
       const data = XLSX.utils.sheet_to_json(worksheet) as ExcelRow[];
 
       const gpsData = data.map((row) => ({
@@ -115,15 +115,13 @@ export const uploadTripData = async (
       return res
         .status(HttpStatusCode.OK)
         .json({ success: true, message: "trip data saved successfully" });
-
     } catch (excelError) {
-      console.error('Error processing Excel file:', excelError);
-      return res
-        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
-        .json({ 
-          message: "Error processing Excel file", 
-          error: excelError instanceof Error ? excelError.message : 'Unknown error'
-        });
+      console.error("Error processing Excel file:", excelError);
+      return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        message: "Error processing Excel file",
+        error:
+          excelError instanceof Error ? excelError.message : "Unknown error",
+      });
     }
   } catch (error) {
     return res
@@ -149,7 +147,9 @@ export const fetchTripsByUserId = async (
       })),
     }));
 
-    return res.status(HttpStatusCode.OK).json(formattedTrips.length ? formattedTrips : []);
+    return res
+      .status(HttpStatusCode.OK)
+      .json(formattedTrips.length ? formattedTrips : []);
   } catch (error) {
     return res
       .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
@@ -157,3 +157,35 @@ export const fetchTripsByUserId = async (
   }
 };
 
+export const deleteTripsByUserId = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const { userId, selectedTrips } = req.body;
+    console.log(req.body);
+
+    if (
+      !userId ||
+      !Array.isArray(selectedTrips) ||
+      selectedTrips.length === 0
+    ) {
+      return res
+        .status(HttpStatusCode.BAD_REQUEST)
+        .json({ message: "Invalid input data" });
+    }
+
+    const response = await TripModel.deleteMany({
+      _id: { $in: selectedTrips },
+      userId: userId,
+    });
+
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, deletedCount: response.deletedCount });
+  } catch (error) {
+    return res
+      .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
+      .json({ message: "❌ Error processing data", error });
+  }
+};

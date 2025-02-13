@@ -15,3 +15,7 @@ export const loadingToast = (message: string) => {
 export const dismissToast = (toastId: Id) => {
   toast.dismiss(toastId);
 };
+
+export const warningToast = (message: string) => {
+  return toast.warning(message)
+}

@@ -3,22 +3,12 @@ import { ITripData } from "../../interfaces/interfaces";
 
 interface pageProps {
   tripDatas : ITripData[]
+  deleteTrips: (selectedTrips: string[]) => void
 }
 
-const TripTable = ({tripDatas}: pageProps) => {
+const TripTable = ({tripDatas, deleteTrips}: pageProps) => {
+
   const [selectedTrips, setSelectedTrips] = useState<string[]>([]);
-  const trips = [
-    { id: 1, route: "Bangalore - Mysore" },
-    { id: 2, route: "Bangalore - Mysore" },
-    { id: 3, route: "Bangalore - Mysore" },
-    { id: 4, route: "Bangalore - Mysore" },
-    { id: 5, route: "Bangalore - Mysore" },
-    { id: 6, route: "Bangalore - Mysore" },
-    { id: 7, route: "Bangalore - Mysore" },
-    { id: 8, route: "Bangalore - Mysore" },
-    { id: 9, route: "Bangalore - Mysore" },
-    { id: 10, route: "Bangalore - Mysore" },
-  ];
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
@@ -28,7 +18,7 @@ const TripTable = ({tripDatas}: pageProps) => {
     }
   };
 
-  const handleSelectTrip = (id) => {
+  const handleSelectTrip = (id: string) => {
     setSelectedTrips((prev) =>
       prev.includes(id) ? prev.filter((tripId) => tripId !== id) : [...prev, id]
     );
@@ -39,7 +29,7 @@ const TripTable = ({tripDatas}: pageProps) => {
       <div className="flex justify-between items-center p-4 border-b border-gray-100">
         <h2 className="text-gray-800 font-bold text-xl">Your Trips</h2>
         <div className="flex gap-2">
-          <button className="px-6 py-1.5 text-sm border bg-white border-gray-500 rounded-md text-gray-500 hover:bg-gray-200">
+          <button onClick={() => deleteTrips(selectedTrips)} className="px-6 py-1.5 text-sm border bg-white border-gray-500 rounded-md text-gray-500 hover:bg-gray-200">
             Delete
           </button>
           <button className="px-6 py-1.5 text-sm bg-gray-500 border border-gray-200 rounded-md text-white hover:bg-gray-600">
