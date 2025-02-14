@@ -4,6 +4,9 @@ import { ChevronLeft, Clock, Route } from "lucide-react";
 import L from "leaflet";
 import Card from "../components/ui/card";
 import Header from "../components/ui/header";
+import { useFetchTripsDetailsQuery } from "../store/slices/apiSlices";
+import { useSelector } from "react-redux";
+import { RootState } from "../store/store";
 
 // Fix Leaflet icon issue
 const icon = L.icon({
@@ -39,11 +42,19 @@ interface TripData {
   }[];
 }
 
-// interface TripTrackerProps {
-//   tripData: TripData;
-// }
 
 const TripTracker = () => {
+
+  const selectedTrips = useSelector(
+    (state: RootState) => state.trip.selectedTrips
+  );
+
+  console.log("selectedTrips:", selectedTrips)
+
+  const {data: fetchTripsDetails}  = useFetchTripsDetailsQuery(selectedTrips);
+
+  console.log("fetchTripsDetails:", fetchTripsDetails);
+
   const tripData: TripData = {
     id: "1",
     location: "Colaba",
@@ -73,7 +84,7 @@ const TripTracker = () => {
 
   const stats = [
     {
-      value: tripData.stats.totalDistance,
+      value: tripData?.stats?.totalDistance,
       label: "Total Distance Travelled",
       icon: <Route className="w-6 h-6 text-cyan-500" />,
     },
@@ -88,7 +99,7 @@ const TripTracker = () => {
       icon: <Clock className="w-6 h-6 text-teal-400" />,
     },
     {
-      value: tripData.stats.overSpeedingDistance,
+      value: tripData?.stats?.overSpeedingDistance,
       label: "Over Speeding Distance",
       icon: <Route className="w-6 h-6 text-teal-400" />,
     },
@@ -133,7 +144,7 @@ const TripTracker = () => {
 
         {/* Map */}
         <Card className="mt-4 mb-4">
-          <div className="h-[400px] w-full">
+          <div className="h-[600px] w-full">
             <MapContainer
               center={defaultPosition}
               zoom={13}

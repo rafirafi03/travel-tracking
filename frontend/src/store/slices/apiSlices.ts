@@ -34,6 +34,12 @@ export const apiSlices = createApi({
         method: HttpMethod.DELETE,
         body: deleteData
       })
+    }),
+    fetchTripsDetails: builder.query({
+      query: (datas) => ({
+        url: `/fetchTripsDetails/${datas}`,
+        method: HttpMethod.GET,
+      })
     })
   }),
 });
@@ -42,5 +48,6 @@ export const {
   useLoginMutation,
   useUploadTripDataMutation,
   useFetchTripsQuery,
-  useDeleteTripsMutation
+  useDeleteTripsMutation,
+  useFetchTripsDetailsQuery
 } = apiSlices;

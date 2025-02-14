@@ -1,27 +1,68 @@
-import { useState } from "react";
 import { ITripData } from "../../interfaces/interfaces";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedTrips } from "../../store/slices/tripSlice";
+import { RootState } from "../../store/store";
+import {
+  warningToast,
+  errorToast,
+  successToast,
+  loadingToast,
+  dismissToast,
+} from "../../utils/toast";
+import { useDeleteTripsMutation } from "../../store/slices/apiSlices";
+import { toast } from "react-toastify";
+import { getUserIdFromToken } from "../../utils/tokenHelper";
+import { useNavigate } from "react-router-dom";
 
 interface pageProps {
-  tripDatas : ITripData[]
-  deleteTrips: (selectedTrips: string[]) => void
+  tripDatas: ITripData[];
 }
 
-const TripTable = ({tripDatas, deleteTrips}: pageProps) => {
+const TripTable = ({ tripDatas }: pageProps) => {
+  const navigate = useNavigate();
+  const [deleteTrips] = useDeleteTripsMutation();
+  const userId = getUserIdFromToken("userToken");
+  const dispatch = useDispatch();
+  const selectedTrips = useSelector(
+    (state: RootState) => state.trip.selectedTrips
+  );
 
-  const [selectedTrips, setSelectedTrips] = useState<string[]>([]);
-
-  const handleSelectAll = (e) => {
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedTrips(tripDatas.map((trip) => trip._id));
+      dispatch(setSelectedTrips(tripDatas.map((trip) => trip._id))); // Select all
     } else {
-      setSelectedTrips([]);
+      dispatch(setSelectedTrips([])); // Deselect all
     }
   };
 
   const handleSelectTrip = (id: string) => {
-    setSelectedTrips((prev) =>
-      prev.includes(id) ? prev.filter((tripId) => tripId !== id) : [...prev, id]
-    );
+    const updatedSelection = selectedTrips.includes(id)
+      ? selectedTrips.filter((tripId: string) => tripId !== id)
+      : [...selectedTrips, id];
+
+    dispatch(setSelectedTrips(updatedSelection));
+  };
+
+  const handleDeleteTrips = async () => {
+    try {
+      if (selectedTrips.length <= 0) {
+        warningToast("select trips to delete");
+        return;
+      }
+      const toastLoading = loadingToast("deleting...");
+
+      const response = await deleteTrips({ userId, selectedTrips }).unwrap();
+      dismissToast(toastLoading);
+
+      if (response.success) {
+        successToast("deleted successfully");
+      } else {
+        errorToast("failed to delete trips!");
+      }
+    } catch (error) {
+      toast.dismiss();
+      errorToast("something went wrong");
+    }
   };
 
   return (
@@ -29,10 +70,16 @@ const TripTable = ({tripDatas, deleteTrips}: pageProps) => {
       <div className="flex justify-between items-center p-4 border-b border-gray-100">
         <h2 className="text-gray-800 font-bold text-xl">Your Trips</h2>
         <div className="flex gap-2">
-          <button onClick={() => deleteTrips(selectedTrips)} className="px-6 py-1.5 text-sm border bg-white border-gray-500 rounded-md text-gray-500 hover:bg-gray-200">
+          <button
+            onClick={handleDeleteTrips}
+            className="px-6 py-1.5 text-sm border bg-white border-gray-500 rounded-md text-gray-500 hover:bg-gray-200"
+          >
             Delete
           </button>
-          <button className="px-6 py-1.5 text-sm bg-gray-500 border border-gray-200 rounded-md text-white hover:bg-gray-600">
+          <button
+            onClick={() => navigate('/tripTracking')}
+            className="px-6 py-1.5 text-sm bg-gray-500 border border-gray-200 rounded-md text-white hover:bg-gray-600"
+          >
             Open
           </button>
         </div>

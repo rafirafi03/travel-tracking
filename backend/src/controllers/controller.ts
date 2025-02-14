@@ -6,8 +6,11 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import XLSX from "xlsx";
 import TripModel from "../models/tripModel";
-import { ExcelRow } from "../interfaces/interface";
+import { ExcelRow, GPSData} from "../interfaces/interface";
 import axios from "axios";
+import mongoose from 'mongoose';
+import geolib from 'geolib'
+import { calculateTripMetrics } from "../services/tripAnalyzeService";
 
 dotenv.config();
 
@@ -17,8 +20,6 @@ export const loginUser = async (
 ): Promise<Response> => {
   try {
     const { email, password } = req.body;
-
-    console.log("req.body:", req.body);
 
     let user = await User.findOne({ email });
 
@@ -65,9 +66,6 @@ export const uploadTripData = async (
   try {
     const { tripName, userId } = req.body;
     const excelFile = req.file;
-
-    console.log("req.body:", req.body);
-    console.log("excelFile:", excelFile);
 
     if (!excelFile) {
       console.log("no excel file");
@@ -187,5 +185,46 @@ export const deleteTripsByUserId = async (
     return res
       .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
       .json({ message: "❌ Error processing data", error });
+  }
+};
+
+export const fetchTripsDetails = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const tripIds = req.params.selectedTrips.split(',');
+    
+    if (!tripIds.length) {
+      return res.status(HttpStatusCode.BAD_REQUEST).json({ 
+        success: false, 
+        message: 'No trip IDs provided' 
+      });
+    }
+
+    const trips = await TripModel.find({ _id: { $in: tripIds } });
+
+    const tripsWithMetrics = trips.map(trip => {
+      const metrics = calculateTripMetrics(trip.gpsData);
+      return {
+        tripId: trip._id,
+        name: trip.name,
+        userId: trip.userId,
+        metrics
+      };
+    });
+
+    return res.status(HttpStatusCode.OK).json({
+      success: true,
+      data: tripsWithMetrics
+    });
+
+  } catch (error) {
+    console.error('Error processing trips:', error);
+    return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: "❌ Error processing data",
+      error: error instanceof Error ? error.message : 'Unknown error occurred'
+    });
   }
 };
