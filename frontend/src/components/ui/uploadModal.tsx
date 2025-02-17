@@ -2,19 +2,28 @@ import { useRef, useState } from "react";
 import { X } from "lucide-react";
 import { useUploadTripDataMutation } from "../../store/slices/apiSlices";
 import { toast } from "react-toastify";
-import { dismissToast, errorToast, loadingToast, successToast } from "../../utils/toast";
-import { getUserIdFromToken } from '../../utils/tokenHelper'
+import {
+  dismissToast,
+  errorToast,
+  loadingToast,
+  successToast,
+  warningToast,
+} from "../../utils/toast";
+import { getUserIdFromToken } from "../../utils/tokenHelper";
+import { useFetchTripsQuery } from "../../store/slices/apiSlices";
+import { useNavigate } from "react-router-dom";
 
 interface pageProps {
   isOpen: boolean;
   onClose: () => void;
+  refetch: ReturnType<typeof useFetchTripsQuery>["refetch"];
 }
 
-const UploadModal = ({ isOpen, onClose }: pageProps) => {
+const UploadModal = ({ isOpen, onClose, refetch }: pageProps) => {
+  const navigate = useNavigate()
+  const userId = getUserIdFromToken("userToken");
 
-  const userId = getUserIdFromToken("userToken")
-
-  const [uploadTrip] = useUploadTripDataMutation()
+  const [uploadTrip] = useUploadTripDataMutation();
 
   const [tripName, setTripName] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -32,30 +41,41 @@ const UploadModal = ({ isOpen, onClose }: pageProps) => {
 
   const handleSubmit = async () => {
     try {
-      if(!selectedFile) {
-        errorToast('please select a file')
-        return
+      if (!selectedFile) {
+        errorToast("please select a file");
+        return;
       }
-      const toastLoading = loadingToast('uploading file...')
+      if (!tripName) {
+        errorToast("please enter trip name");
+        return;
+      }
+      const toastLoading = loadingToast("uploading file...");
       const formData = new FormData();
-      formData.append('tripName', tripName);
-      formData.append('selectedFile',selectedFile)
-      formData.append('userId',userId ? userId : "")
-      const response = await uploadTrip(formData).unwrap()
+      formData.append("tripName", tripName);
+      formData.append("selectedFile", selectedFile);
+      formData.append("userId", userId ? userId : "");
+      const response = await uploadTrip(formData).unwrap();
       dismissToast(toastLoading);
 
-      if(response.success) {
-        successToast('file uploaded successfully');
-        onClose()
+      if (response.success) {
+        refetch();
+        successToast("file uploaded successfully");
+        setTripName("");
+        setSelectedFile(null);
+        onClose();
       } else {
-        errorToast('something went wrong!')
+        if (response.status == 401) {
+          warningToast("session expired! logging out...");
+          localStorage.removeItem("userToken");
+          navigate("/login");
+        }
+        errorToast("something went wrong!");
       }
-
     } catch (error) {
-      toast.dismiss()
-      errorToast('failed to upload file!')
+      toast.dismiss();
+      errorToast("failed to upload file!");
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-10 z-50">
@@ -131,7 +151,10 @@ const UploadModal = ({ isOpen, onClose }: pageProps) => {
             >
               Cancel
             </button>
-            <button onClick={handleSubmit} className="flex-1 px-6 py-3 bg-[#1B2B3A] text-white rounded-lg hover:bg-[#162431] transition-colors">
+            <button
+              onClick={handleSubmit}
+              className="flex-1 px-6 py-3 bg-[#1B2B3A] text-white rounded-lg hover:bg-[#162431] transition-colors"
+            >
               Save
             </button>
           </div>

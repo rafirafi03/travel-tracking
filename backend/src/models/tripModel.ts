@@ -7,8 +7,8 @@ const TripSchema = new mongoose.Schema({
     type: [{
       latitude: { type: Number, required: true },
       longitude: { type: Number, required: true },
-      timestamp: { type: Date, required: true },
-      ignition: { type: Boolean, required: true }
+      timestamp: { type: String, required: true },
+      ignition: { type: String, required: true }
     }],
     required: true // Make gpsData array required
   }

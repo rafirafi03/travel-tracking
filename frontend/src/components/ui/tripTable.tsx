@@ -13,12 +13,15 @@ import { useDeleteTripsMutation } from "../../store/slices/apiSlices";
 import { toast } from "react-toastify";
 import { getUserIdFromToken } from "../../utils/tokenHelper";
 import { useNavigate } from "react-router-dom";
+import { useFetchTripsQuery } from "../../store/slices/apiSlices";
+
 
 interface pageProps {
   tripDatas: ITripData[];
+  refetch: ReturnType<typeof useFetchTripsQuery>['refetch'];
 }
 
-const TripTable = ({ tripDatas }: pageProps) => {
+const TripTable = ({ tripDatas, refetch }: pageProps) => {
   const navigate = useNavigate();
   const [deleteTrips] = useDeleteTripsMutation();
   const userId = getUserIdFromToken("userToken");
@@ -27,9 +30,11 @@ const TripTable = ({ tripDatas }: pageProps) => {
     (state: RootState) => state.trip.selectedTrips
   );
 
+  console.log("selectedTrips:", selectedTrips)
+
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      dispatch(setSelectedTrips(tripDatas.map((trip) => trip._id))); // Select all
+      dispatch(setSelectedTrips(tripDatas.map((trip) => trip._id)));
     } else {
       dispatch(setSelectedTrips([])); // Deselect all
     }
@@ -55,15 +60,44 @@ const TripTable = ({ tripDatas }: pageProps) => {
       dismissToast(toastLoading);
 
       if (response.success) {
+        refetch()
         successToast("deleted successfully");
       } else {
+        if(response.status === 401) {
+          warningToast('session expired! logging out...')
+          localStorage.removeItem('userToken')
+          navigate('/login')
+        }
         errorToast("failed to delete trips!");
       }
-    } catch (error) {
-      toast.dismiss();
-      errorToast("something went wrong");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        // Handle the case where the error is an instance of Error
+        if (error instanceof Response && error.status === 401) {
+          warningToast('Session expired! Logging out...');
+          localStorage.removeItem('userToken');
+          navigate('/login');
+        } else {
+          toast.dismiss();
+          errorToast("Something went wrong");
+        }
+      } else {
+        // Handle unexpected errors (e.g., not an instance of Error)
+        console.error('Unexpected error:', error);
+        toast.dismiss();
+        errorToast("Something went wrong");
+      }
     }
+    
   };
+
+  const handleOpen = () => {
+    if(selectedTrips.length == 0) {
+      warningToast('Please select any trip!')
+    } else {
+      navigate('/tripTracking')
+    }
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-sm">
@@ -77,7 +111,7 @@ const TripTable = ({ tripDatas }: pageProps) => {
             Delete
           </button>
           <button
-            onClick={() => navigate('/tripTracking')}
+            onClick={handleOpen}
             className="px-6 py-1.5 text-sm bg-gray-500 border border-gray-200 rounded-md text-white hover:bg-gray-600"
           >
             Open

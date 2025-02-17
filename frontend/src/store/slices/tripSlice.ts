@@ -15,8 +15,11 @@ const tripSlice = createSlice({
     setSelectedTrips: (state, action: PayloadAction<string[]>) => {
       state.selectedTrips = action.payload;
     },
+    rehydrateTrips: (state, action: PayloadAction<TripState>) => {
+      return action.payload;
+    },
   },
 });
 
-export const { setSelectedTrips } = tripSlice.actions;
+export const { setSelectedTrips, rehydrateTrips  } = tripSlice.actions;
 export default tripSlice.reducer;

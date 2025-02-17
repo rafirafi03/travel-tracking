@@ -23,22 +23,34 @@ export const apiSlices = createApi({
       }),
     }),
     fetchTrips: builder.query({
-      query: (userId) => ({
-        url: `/fetchTrips/${userId}`,
-        method: HttpMethod.GET,
-      }),
+      query: ({userId, page}) => ({
+          url: `/fetchTrips/${userId}?page=${page}`,
+          method: HttpMethod.GET,
+        }),
     }),
     deleteTrips: builder.mutation({
       query: (deleteData) => ({
-        url: '/deleteTrips',
+        url: "/deleteTrips",
         method: HttpMethod.DELETE,
-        body: deleteData
-      })
+        body: deleteData,
+      }),
     }),
     fetchTripsDetails: builder.query({
-      query: (datas) => ({
-        url: `/fetchTripsDetails/${datas}`,
+      query: ({selectedTrips, page}) => ({
+        url: `/fetchTripsDetails/${selectedTrips}?page=${page}`,
         method: HttpMethod.GET,
+      }),
+    }),
+    fetchDataCount: builder.query({
+      query: (userId) => ({
+        url: `/fetchDataCount/${userId}`,
+        method: HttpMethod.GET,
+      }),
+    }),
+    logout: builder.mutation({
+      query: ()=> ({
+        url: '/logout',
+        method: HttpMethod.POST
       })
     })
   }),
@@ -49,5 +61,7 @@ export const {
   useUploadTripDataMutation,
   useFetchTripsQuery,
   useDeleteTripsMutation,
-  useFetchTripsDetailsQuery
+  useFetchTripsDetailsQuery,
+  useFetchDataCountQuery,
+  useLogoutMutation
 } = apiSlices;

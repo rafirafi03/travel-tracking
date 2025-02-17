@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import Card from "../components/ui/card";
 import { useLoginMutation } from "../store/slices/apiSlices";
 import { dismissToast, errorToast, loadingToast, successToast } from "../utils/toast";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   email: string;
@@ -9,6 +10,9 @@ interface FormData {
 }
 
 const LoginForm: React.FC = () => {
+
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -28,6 +32,7 @@ const LoginForm: React.FC = () => {
     if(response.success) {
       localStorage.setItem("userToken",response.token)
       successToast('Signin Successfull')
+      navigate('/')
     } else {
       errorToast(response.error)
     }
