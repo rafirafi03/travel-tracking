@@ -10,12 +10,16 @@ import fetchErrorCheck from "../utils/fetchErrorCheck";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const userId = getUserIdFromToken("userToken");
 
-  const [page, setPage] = useState<string>("1")
+  const [page, setPage] = useState<string>("1");
 
-  const { data: fetchTrips, refetch, error: fetchTripsError } = useFetchTripsQuery({userId,page});
+  const {
+    data: fetchTrips,
+    refetch,
+    error: fetchTripsError,
+  } = useFetchTripsQuery({ userId, page });
 
   useEffect(() => {
     const isError = fetchErrorCheck({
@@ -26,7 +30,7 @@ const Home = () => {
       navigate("/login");
     }
   }, [fetchTripsError, navigate]);
-  
+
   const [uploadModal, setUploadModal] = useState<boolean>(false);
   console.log(fetchTrips, "fetchtrips");
 

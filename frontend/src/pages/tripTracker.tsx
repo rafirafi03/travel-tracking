@@ -48,19 +48,20 @@ const TripTracker = () => {
 
   console.log("selectedTrips:", selectedTrips);
 
-  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { data: fetchTripsDetails, error: fetchTripsDetailsError } = useFetchTripsDetailsQuery({selectedTrips,page:currentPage});
+  const { data: fetchTripsDetails, error: fetchTripsDetailsError } =
+    useFetchTripsDetailsQuery({ selectedTrips, page: currentPage });
 
   useEffect(() => {
-      const isError = fetchErrorCheck({
-        fetchError: fetchTripsDetailsError,
-      });
-  
-      if (isError) {
-        navigate("/login");
-      }
-    }, [fetchTripsDetailsError, navigate]);
+    const isError = fetchErrorCheck({
+      fetchError: fetchTripsDetailsError,
+    });
+
+    if (isError) {
+      navigate("/login");
+    }
+  }, [fetchTripsDetailsError, navigate]);
 
   console.log("fetchTripsDetails:", fetchTripsDetails);
 
@@ -72,9 +73,14 @@ const TripTracker = () => {
   );
 
   const itemsPerPage = 10; // Number of items per page
-  const totalPages = Math.ceil((selectedTripDetails?.gpsData?.length ?? 1) / itemsPerPage); // Correct total pages calculation
+  const totalPages = Math.ceil(
+    (selectedTripDetails?.gpsData?.length ?? 1) / itemsPerPage
+  ); // Correct total pages calculation
 
-  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+  const pageNumbers = Array.from(
+    { length: totalPages },
+    (_, index) => index + 1
+  );
 
   const handlePageClick = (page: number) => {
     setCurrentPage(page);
