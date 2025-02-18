@@ -1,7 +1,12 @@
 import { FiLogOut } from "react-icons/fi"; // Import the logout icon from Feather icons
 import { useNavigate } from "react-router-dom";
 import { useLogoutMutation } from "../../store/slices/apiSlices";
-import { dismissToast, errorToast, loadingToast, successToast } from "../../utils/toast";
+import {
+  dismissToast,
+  errorToast,
+  loadingToast,
+  successToast,
+} from "../../utils/toast";
 import { toast } from "react-toastify";
 
 const Header = () => {

@@ -1,8 +1,8 @@
 // ProtectedRoute.tsx
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectedRoute = () => {
-  const token = localStorage.getItem('userToken');
+  const token = localStorage.getItem("userToken");
 
   // If token is not found, redirect to the login page
   if (!token) {

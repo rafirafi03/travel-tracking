@@ -1,11 +1,9 @@
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 
 export const getUserIdFromToken = (tokenName: string) => {
-
-  let token: string | null = ""
+  let token: string | null = "";
 
   token = localStorage.getItem(tokenName);
-
 
   if (token) {
     try {
@@ -15,12 +13,11 @@ export const getUserIdFromToken = (tokenName: string) => {
       // Extract and return the userId
       return decodedToken.userId;
     } catch (error) {
-      console.error('Invalid token', error);
+      console.error("Invalid token", error);
       return null;
     }
   } else {
-    console.error('No token found in localStorage');
+    console.error("No token found in localStorage");
     return null;
   }
 };
-

@@ -1,17 +1,19 @@
 import { Upload } from "lucide-react";
 
 interface pageProps {
-  onClick : ()=> void
-  dataLength: number
+  onClick: () => void;
+  dataLength: number;
 }
 
-export default function uploadTrip({onClick, dataLength}: pageProps) {
-
+export default function uploadTrip({ onClick, dataLength }: pageProps) {
   return (
     <>
       {dataLength > 0 ? (
         <div className="bg-white flex border border-gray-400 rounded-lg shadow-sm p-6 space-x-4 mb-6">
-          <button onClick={onClick} className="flex items-center gap-2 px-4 py-2 border btn-primary border-gray-200 rounded-lg text-white hover:bg-gray-50">
+          <button
+            onClick={onClick}
+            className="flex items-center gap-2 px-4 py-2 border btn-primary border-gray-200 rounded-lg text-white hover:bg-gray-50"
+          >
             <Upload size={20} />
             <span>Upload Trip</span>
           </button>
@@ -26,7 +28,10 @@ export default function uploadTrip({onClick, dataLength}: pageProps) {
             alt="Upload Placeholder"
             className="w-50 h-50 object-cover"
           />
-          <button onClick={onClick} className="flex items-center gap-2 px-4 py-2 btn-primary border border-gray-200 rounded-lg text-white hover:bg-gray-700">
+          <button
+            onClick={onClick}
+            className="flex items-center gap-2 px-4 py-2 btn-primary border border-gray-200 rounded-lg text-white hover:bg-gray-700"
+          >
             <Upload size={20} />
             <span>Upload Trip</span>
           </button>

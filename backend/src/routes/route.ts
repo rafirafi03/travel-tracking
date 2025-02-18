@@ -17,28 +17,37 @@ router.post("/login", async (req, res) => {
   await loginUser(req, res);
 });
 
-router.post("/uploadTrip", authMiddleware, upload.single("selectedFile"), async (req, res) => {
-  await uploadTripData(req, res);
-});
+router.post(
+  "/uploadTrip",
+  authMiddleware,
+  upload.single("selectedFile"),
+  async (req, res) => {
+    await uploadTripData(req, res);
+  }
+);
 
 router.get("/fetchTrips/:userId", authMiddleware, async (req, res) => {
   await fetchTripsByUserId(req, res);
 });
 
-router.delete("/deleteTrips", authMiddleware,  async (req, res) => {
+router.delete("/deleteTrips", authMiddleware, async (req, res) => {
   await deleteTripsByUserId(req, res);
 });
 
-router.get("/fetchTripsDetails/:selectedTrips", authMiddleware, async (req, res) => {
-  await fetchTripsDetails(req, res);
+router.get(
+  "/fetchTripsDetails/:selectedTrips",
+  authMiddleware,
+  async (req, res) => {
+    await fetchTripsDetails(req, res);
+  }
+);
+
+router.get("/fetchDataCount/:userId", authMiddleware, async (req, res) => {
+  await fetchDataCount(req, res);
 });
 
-router.get('/fetchDataCount/:userId', authMiddleware, async (req, res) => {
-  await fetchDataCount(req, res)
-})
-
-router.post('/logout', async(req, res) => {
-  await logout(req, res)
-})
+router.post("/logout", async (req, res) => {
+  await logout(req, res);
+});
 
 export default router;

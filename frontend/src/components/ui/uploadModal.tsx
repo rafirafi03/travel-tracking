@@ -20,7 +20,7 @@ interface pageProps {
 }
 
 const UploadModal = ({ isOpen, onClose, refetch }: pageProps) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const userId = getUserIdFromToken("userToken");
 
   const [uploadTrip] = useUploadTripDataMutation();

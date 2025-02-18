@@ -1,7 +1,12 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import Card from "../components/ui/card";
 import { useLoginMutation } from "../store/slices/apiSlices";
-import { dismissToast, errorToast, loadingToast, successToast } from "../utils/toast";
+import {
+  dismissToast,
+  errorToast,
+  loadingToast,
+  successToast,
+} from "../utils/toast";
 import { useNavigate } from "react-router-dom";
 
 interface FormData {
@@ -10,7 +15,6 @@ interface FormData {
 }
 
 const LoginForm: React.FC = () => {
-
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<FormData>({
@@ -18,26 +22,26 @@ const LoginForm: React.FC = () => {
     password: "",
   });
 
-  const [loginMutation] = useLoginMutation()
+  const [loginMutation] = useLoginMutation();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const toastLoading = loadingToast('Signing in...')
-    
-    const response = await loginMutation(formData).unwrap()
+    const toastLoading = loadingToast("Signing in...");
 
-    dismissToast(toastLoading)
+    const response = await loginMutation(formData).unwrap();
 
-    if(response.success) {
-      localStorage.setItem("userToken",response.token)
-      successToast('Signin Successfull')
-      navigate('/')
+    dismissToast(toastLoading);
+
+    if (response.success) {
+      localStorage.setItem("userToken", response.token);
+      successToast("Signin Successfull");
+      navigate("/");
     } else {
-      errorToast(response.error)
+      errorToast(response.error);
     }
 
-    console.log("response:",response)
+    console.log("response:", response);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +62,9 @@ const LoginForm: React.FC = () => {
               alt="Speedometer"
               className="w-9 h-9"
             />
-            <span className="text-xl text-black font-bold font-squada">Speedo</span>
+            <span className="text-xl text-black font-bold font-squada">
+              Speedo
+            </span>
           </div>
         </div>
 

@@ -17,5 +17,5 @@ export const dismissToast = (toastId: Id) => {
 };
 
 export const warningToast = (message: string) => {
-  return toast.warning(message)
-}
+  return toast.warning(message);
+};

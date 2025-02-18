@@ -7,18 +7,26 @@ interface AuthenticatedRequest extends Request {
   user?: any; // Attach user information to the request object
 }
 
-const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const authMiddleware = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   const token = req.cookies.userToken;
 
   if (!token) {
-    res.status(HttpStatusCode.UNAUTHORIZED).json({ success: false, message: "Unauthorized" }); // Send response
+    res
+      .status(HttpStatusCode.UNAUTHORIZED)
+      .json({ success: false, message: "Unauthorized" }); // Send response
     return; // Return void
   }
 
   try {
     next(); // Call the next middleware
   } catch (err) {
-    res.status(HttpStatusCode.UNAUTHORIZED).json({ success: false, message: "Invalid token" }); // Send response
+    res
+      .status(HttpStatusCode.UNAUTHORIZED)
+      .json({ success: false, message: "Invalid token" }); // Send response
     return; // Return void
   }
 };

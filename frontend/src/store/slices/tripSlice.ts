@@ -14,7 +14,7 @@ const tripSlice = createSlice({
   reducers: {
     setSelectedTrips: (state, action: PayloadAction<string[]>) => {
       state.selectedTrips = action.payload;
-    }
+    },
   },
 });
 

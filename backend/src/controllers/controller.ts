@@ -48,18 +48,18 @@ export const loginUser = async (
     }
 
     // Generate token
-      const token = jwt.sign(
-        { userId: user._id },
-        process.env.JWT_SECRET || "defaultSecret",
-        { expiresIn: process.env.JWT_EXPIRES_IN || "1h" } as jwt.SignOptions
-      );
+    const token = jwt.sign(
+      { userId: user._id },
+      process.env.JWT_SECRET || "defaultSecret",
+      { expiresIn: process.env.JWT_EXPIRES_IN || "1h" } as jwt.SignOptions
+    );
 
-      res.cookie("userToken", token, {
-        httpOnly: true, 
-        secure: true, 
-        sameSite: 'none',
-        maxAge: 3600000, 
-      });
+    res.cookie("userToken", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      maxAge: 3600000,
+    });
 
     return res.status(HttpStatusCode.CREATED).json({
       success: true,
@@ -274,7 +274,7 @@ export const fetchTripsDetails = async (
     const tripIds = req.params.selectedTrips.split(",");
 
     const { page } = req.query;
-    const pageNumber = Number(page)
+    const pageNumber = Number(page);
 
     console.log("tripIds:", tripIds);
 
@@ -625,7 +625,7 @@ export const fetchTripsDetails = async (
       const startIndex = (pageNumber - 1) * pageSize;
       const endIndex = pageNumber * pageSize;
 
-      tableDetails = tableDetails.slice(startIndex, endIndex)
+      tableDetails = tableDetails.slice(startIndex, endIndex);
 
       // Return the original formatted trip data plus the new tableDetails field
       return {
@@ -683,12 +683,14 @@ export const fetchDataCount = async (
 export const logout = async (
   req: Request,
   res: Response
-) : Promise<Response> => {
+): Promise<Response> => {
   try {
     res.setHeader("Set-Cookie", [
       "userToken=; Path=/; HttpOnly; Secure; SameSite=Strict; Expires=Thu, 01 Jan 1970 00:00:00 UTC",
     ]);
-    return res.status(HttpStatusCode.OK).json({success: true, message: 'logged out'})
+    return res
+      .status(HttpStatusCode.OK)
+      .json({ success: true, message: "logged out" });
   } catch (error) {
     console.error("Error processing trips:", error);
     return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
@@ -697,4 +699,4 @@ export const logout = async (
       error: error instanceof Error ? error.message : "Unknown error occurred",
     });
   }
-}
+};

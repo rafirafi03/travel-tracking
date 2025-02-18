@@ -15,10 +15,9 @@ import { getUserIdFromToken } from "../../utils/tokenHelper";
 import { useNavigate } from "react-router-dom";
 import { useFetchTripsQuery } from "../../store/slices/apiSlices";
 
-
 interface pageProps {
   tripDatas: ITripData[];
-  refetch: ReturnType<typeof useFetchTripsQuery>['refetch'];
+  refetch: ReturnType<typeof useFetchTripsQuery>["refetch"];
 }
 
 const TripTable = ({ tripDatas, refetch }: pageProps) => {
@@ -30,7 +29,7 @@ const TripTable = ({ tripDatas, refetch }: pageProps) => {
     (state: RootState) => state.trip.selectedTrips
   );
 
-  console.log("selectedTrips:", selectedTrips)
+  console.log("selectedTrips:", selectedTrips);
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
@@ -60,13 +59,13 @@ const TripTable = ({ tripDatas, refetch }: pageProps) => {
       dismissToast(toastLoading);
 
       if (response.success) {
-        refetch()
+        refetch();
         successToast("deleted successfully");
       } else {
-        if(response.status === 401) {
-          warningToast('session expired! logging out...')
-          localStorage.removeItem('userToken')
-          navigate('/login')
+        if (response.status === 401) {
+          warningToast("session expired! logging out...");
+          localStorage.removeItem("userToken");
+          navigate("/login");
         }
         errorToast("failed to delete trips!");
       }
@@ -74,30 +73,29 @@ const TripTable = ({ tripDatas, refetch }: pageProps) => {
       if (error instanceof Error) {
         // Handle the case where the error is an instance of Error
         if (error instanceof Response && error.status === 401) {
-          warningToast('Session expired! Logging out...');
-          localStorage.removeItem('userToken');
-          navigate('/login');
+          warningToast("Session expired! Logging out...");
+          localStorage.removeItem("userToken");
+          navigate("/login");
         } else {
           toast.dismiss();
           errorToast("Something went wrong");
         }
       } else {
         // Handle unexpected errors (e.g., not an instance of Error)
-        console.error('Unexpected error:', error);
+        console.error("Unexpected error:", error);
         toast.dismiss();
         errorToast("Something went wrong");
       }
     }
-    
   };
 
   const handleOpen = () => {
-    if(selectedTrips.length == 0) {
-      warningToast('Please select any trip!')
+    if (selectedTrips.length == 0) {
+      warningToast("Please select any trip!");
     } else {
-      navigate('/tripTracking')
+      navigate("/tripTracking");
     }
-  }
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-sm">

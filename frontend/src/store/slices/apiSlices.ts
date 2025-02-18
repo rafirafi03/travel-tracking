@@ -23,10 +23,10 @@ export const apiSlices = createApi({
       }),
     }),
     fetchTrips: builder.query({
-      query: ({userId, page}) => ({
-          url: `/fetchTrips/${userId}?page=${page}`,
-          method: HttpMethod.GET,
-        }),
+      query: ({ userId, page }) => ({
+        url: `/fetchTrips/${userId}?page=${page}`,
+        method: HttpMethod.GET,
+      }),
     }),
     deleteTrips: builder.mutation({
       query: (deleteData) => ({
@@ -36,7 +36,7 @@ export const apiSlices = createApi({
       }),
     }),
     fetchTripsDetails: builder.query({
-      query: ({selectedTrips, page}) => ({
+      query: ({ selectedTrips, page }) => ({
         url: `/fetchTripsDetails/${selectedTrips}?page=${page}`,
         method: HttpMethod.GET,
       }),
@@ -48,11 +48,11 @@ export const apiSlices = createApi({
       }),
     }),
     logout: builder.mutation({
-      query: ()=> ({
-        url: '/logout',
-        method: HttpMethod.POST
-      })
-    })
+      query: () => ({
+        url: "/logout",
+        method: HttpMethod.POST,
+      }),
+    }),
   }),
 });
 
@@ -63,5 +63,5 @@ export const {
   useDeleteTripsMutation,
   useFetchTripsDetailsQuery,
   useFetchDataCountQuery,
-  useLogoutMutation
+  useLogoutMutation,
 } = apiSlices;
