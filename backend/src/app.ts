@@ -10,7 +10,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://travel-tracking.vercel.app",
+    origin: "*",
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
