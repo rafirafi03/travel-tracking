@@ -17,7 +17,7 @@ router.post("/login", async (req, res) => {
   await loginUser(req, res);
 });
 
-router.post("/uploadTrip", authMiddleware, upload.single("selectedFile"), async (req, res) => {
+router.post("/uploadTrip", upload.single("selectedFile"), async (req, res) => {
   await uploadTripData(req, res);
 });
 
