@@ -11,7 +11,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["http://localhost:5173","https://travel-tracking.vercel.app"], 
+    origin: "https://travel-tracking.vercel.app", 
     credentials: true, 
     methods: ["GET", "POST", "PUT", "DELETE"], 
     allowedHeaders: ["Content-Type", "Authorization"], 
