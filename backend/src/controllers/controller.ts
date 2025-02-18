@@ -177,7 +177,7 @@ export const uploadTripData = async (
     } catch (excelError) {
       console.error("Error processing Excel file:", excelError);
       return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-        message: "Error processing Excel file",
+        message: "Error processing Excel files",
         error:
           excelError instanceof Error ? excelError.message : "Unknown error",
       });
