@@ -35,7 +35,8 @@ Setup Instructions
 1. Clone the Repository
 
 git clone git@github.com:rafirafi03/travel-tracking.git
-cd speedo
+
+cd travel-tracking
 
 
 2. Install Dependencies
