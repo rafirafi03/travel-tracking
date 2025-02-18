@@ -1,32 +1,19 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-dotenv.config();
-
-const mongoURI = process.env.MONGO_URI as string;
-
-// Global variable to track connection status
-let isConnected = false;
+dotenv.config(); // Load environment variables
 
 const connectDB = async () => {
-  // If we're already connected, return the existing connection
-  if (isConnected) {
-    console.log("Using existing database connection");
-    return;
-  }
-
   try {
-    const db = await mongoose.connect(mongoURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    } as mongoose.ConnectOptions);
-    
-    isConnected = !!db.connections[0].readyState;
-    
-    console.log("MongoDB connected successfully! ✅");
-  } catch (error) {
-    console.error("MongoDB connection failed ❌", error);
-    throw error; // Don't exit process in serverless environment
+    const conn = await mongoose.connect(process.env.MONGO_URI||"mongodb+srv://rafirafi03:gBzhJvnuRbnnAmpB@cluster0.1vcgj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(`Error: ${error.message}`);
+    } else {
+      console.error('An unknown error occurred');
+    }
+    process.exit(1); // Exit on failure
   }
 };
 
