@@ -8,7 +8,7 @@ interface AuthenticatedRequest extends Request {
 }
 
 const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  const token = req.cookies.userToken;
+  const token = req.cookies["userToken"];
 
   if (!token) {
     res.status(HttpStatusCode.UNAUTHORIZED).json({ success: false, message: "Unauthorized" }); // Send response
