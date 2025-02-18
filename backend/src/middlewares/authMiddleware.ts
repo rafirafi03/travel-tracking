@@ -8,7 +8,7 @@ interface AuthenticatedRequest extends Request {
 }
 
 const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
-  const token = req.cookies["userToken"];
+  const token = req.cookies.userToken;
 
   if (!token) {
     res.status(HttpStatusCode.UNAUTHORIZED).json({ success: false, message: "Unauthorized" }); // Send response
@@ -16,9 +16,6 @@ const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunc
   }
 
   try {
-    // Verify the token (replace 'your-secret-key' with your actual secret key)
-    const decoded = jwt.verify(token, "travel-token");
-    req.user = decoded; // Attach the decoded user information to the request object
     next(); // Call the next middleware
   } catch (err) {
     res.status(HttpStatusCode.UNAUTHORIZED).json({ success: false, message: "Invalid token" }); // Send response
