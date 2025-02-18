@@ -56,7 +56,7 @@ export const loginUser = async (
 
       res.cookie("userToken", token, {
         httpOnly: true, 
-        secure: process.env.NODE_ENV === "production", 
+        secure: false, 
         maxAge: 3600000, 
       });
 
