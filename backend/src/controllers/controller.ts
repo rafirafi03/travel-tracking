@@ -88,7 +88,7 @@ export const uploadTripData = async (
     if (!excelFile) {
       console.log("no excel file");
       return res
-        .status(HttpStatusCode.NOT_FOUND)
+        .status(HttpStatusCode.INTERNAL_SERVER_ERROR)
         .json({ message: "No excel file found" });
     }
 
