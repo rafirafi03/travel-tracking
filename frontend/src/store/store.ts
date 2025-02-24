@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { apiSlices } from "./slices/apiSlices";
-import tripReducer from "./slices/tripSlice";
+import tripReducer from "./slices/selectedTripsSlice";
 import storage from "redux-persist/lib/storage"; // Use localStorage
 import { persistReducer, persistStore } from "redux-persist";
 

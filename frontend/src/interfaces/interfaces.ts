@@ -50,3 +50,16 @@ export interface TableDetailRow {
   ignition: string; // Uppercase ignition status
   speed: string; // Speed in KM/H or empty string
 }
+
+  export interface TripsState {
+    trips: ITripDetails[];
+    isLoading: boolean;
+    error: string | null;
+    page: string;
+  }
+
+    export interface RootState {
+      trips: TripsState;
+      // ... other state slices
+    }
+    

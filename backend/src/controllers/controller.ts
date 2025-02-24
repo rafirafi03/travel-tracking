@@ -9,16 +9,12 @@ import TripModel from "../models/tripModel";
 import {
   Coordinate,
   ExcelRow,
-  GPSData,
   IdlingPoint,
   RouteSegment,
   StoppedPoint,
 } from "../interfaces/interface";
 import axios from "axios";
-import mongoose from "mongoose";
-import geolib, { getDistance } from "geolib";
-import moment from "moment";
-import { convertExcelDateToJSDate } from "../services/excelDatetoJsDate";
+import { getDistance } from "geolib";
 import { formatTime } from "../utils/helper";
 
 dotenv.config();
@@ -36,9 +32,10 @@ export const loginUser = async (
       // Compare entered password with hashed password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
+        console.log('no match')
         return res
           .status(HttpStatusCode.UNAUTHORIZED)
-          .json({ error: "Invalid credentials" });
+          .json({ success: false, error: "Invalid credentials" });
       }
     } else {
       // Create new user if not found

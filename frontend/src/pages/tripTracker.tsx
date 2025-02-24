@@ -25,6 +25,7 @@ import { LatLngExpression } from "leaflet";
 import { formatDuration } from "../utils/formatDuration";
 import { useNavigate } from "react-router-dom";
 import fetchErrorCheck from "../utils/fetchErrorCheck";
+import Loader from "../components/ui/loader";
 
 // Fix Leaflet icon issue
 const icon = L.icon({
@@ -50,7 +51,7 @@ const TripTracker = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const { data: fetchTripsDetails, error: fetchTripsDetailsError } =
+  const { data: fetchTripsDetails, isLoading, error: fetchTripsDetailsError } =
     useFetchTripsDetailsQuery({ selectedTrips, page: currentPage });
 
   useEffect(() => {
@@ -187,6 +188,12 @@ const TripTracker = () => {
       icon: <Clock className="text-pink-500" />,
     },
   ];
+
+  if (isLoading) {
+      return (
+        <Loader/>
+      );
+    }
 
   return (
     <>

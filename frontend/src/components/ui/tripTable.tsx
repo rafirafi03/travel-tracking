@@ -1,6 +1,6 @@
 import { ITripData } from "../../interfaces/interfaces";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedTrips } from "../../store/slices/tripSlice";
+import { setSelectedTrips } from "../../store/slices/selectedTripsSlice";
 import { RootState } from "../../store/store";
 import {
   warningToast,
